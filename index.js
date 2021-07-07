@@ -29,19 +29,21 @@ app.get("/login", (req, res) => {
   
   db.get("users").then(value => {
     db.get("passwords").then(psw => {
+      //Check if the database is empty
       if (value === null && psw === null){
         res.end("{\"success\":\"false\"}")
       } else{
-      userlist = value.split("||")
-      passwordlist = psw.split("||")
-      userindex = userlist.indexOf(username)
-      db.get("tokens").then(toke => {
-        if (passwordlist[userindex]===password && userindex !== -1){
-          res.send(`{"success":"true", "token":"${toke.split("||")[userindex]}"}`)
-        } else{
-            res.send(`{"success":"false"}`)
-        }
-      })
+        userlist = value.split("||")
+        passwordlist = psw.split("||")
+        userindex = userlist.indexOf(username)
+        db.get("tokens").then(toke => {
+          //Give the user their token along with a clearence
+          if (passwordlist[userindex]===password && userindex !== -1){
+            res.send(`{"success":"true", "token":"${toke.split("||")[userindex]}"}`)
+          } else{
+              res.send(`{"success":"false"}`)
+          }
+        })
       }
     });
   });
@@ -51,26 +53,31 @@ app.get("/login", (req, res) => {
 app.get("/messages/log", (req, res)=>{
   username = req.query.from.toLowerCase()
   token =req.query.token
-    db.get("users").then(value => {
+  db.get("users").then(value => {
     db.get("tokens").then(toke => {
       userlist = value.split("||")
       tokenlist = toke.split("||")
       userindex = userlist.indexOf(username)
+      //Check using token auth to prevent impersonization
       if (tokenlist[userindex] ===token){
         fs.readFile('data.json', (err, data) => {
           if (err) throw err;
+          //Get the message data and parse a replica
           let msgs = JSON.parse(data);
+          //Add the message into the replica of the data
           msgs[req.query.to.toLowerCase()].push(JSON.parse(`{ "from":"${req.query.from}", "title":"${req.query.title}", "message":"${req.query.msg}", "timestamp":"${req.query.timestamp}", "id":"${req.query.id}"}`))
+          //And put it back into the file
           fs.writeFile('data.json', JSON.stringify(msgs), function (err) {
             if (err) console.log("");
           });
+          //Success!!!
           res.redirect("/")
         });
       }else{
-            res.send("///")
-          }
-        });
-      });
+        res.end("Something went wrong")
+      }
+    });
+  });
 })
 
 
@@ -102,43 +109,52 @@ app.get('/signup/log', (req, res)=>{
   username = req.query.username.toLowerCase()
   password = req.query.password
   db.get("users").then(v => {
+    // Check if there is any usernames in the database
     if (v === null){
       userlist = ""
     }else{
       userlist = v
     }
+    // Muliple accout prevention
     if (!userlist.split("||").includes(username)){
-          
-        db.set("users", userlist+"||"+username).then(() => {});
-      
-    db.get("passwords").then(value => {
-      if (value === null){
-        psw = ""
-      }else{
-        psw = value
-      }
-      db.set("passwords", psw+"||"+password).then(() => {});
-    });
-    db.get("tokens").then(value => {
-      if (value === null){
-        tok = ""
-      }else{
-        tok = value
-      }
-      db.set("tokens", tok+"||"+generate_token()).then(() => {});
-    });
-  //   res.send("Account Created!")
-    fs.readFile('data.json', (err, data) => {
-      if (err) throw err;
-      let msgs = JSON.parse(data);
-      msgs[username] = []
-      fs.writeFile('data.json', JSON.stringify(msgs), function (err) {
-        if (err) console.log("");
+      //Set the username
+      db.set("users", userlist+"||"+username).then(() => {});
+      db.get("passwords").then(value => {
+        // Check if there is any passwords in the database
+        if (value === null){
+          psw = ""
+        }else{
+          psw = value
+        }
+        //Set the password
+        db.set("passwords", psw+"||"+password).then(() => {});
       });
-    });
-    res.redirect('/account-created');
+      db.get("tokens").then(value => {
+        // Check if there is any tokens in the database
+        if (value === null){
+          tok = ""
+        }else{
+          tok = value
+        }
+        //Set the token
+        db.set("tokens", tok+"||"+generate_token()).then(() => {});
+      });
+      //Get the data from the mailbox
+      fs.readFile('data.json', (err, data) => {
+        if (err) throw err;
+        //Parse a replica
+        let msgs = JSON.parse(data);
+        //Create a mailbox for the new user
+        msgs[username] = []
+        //Merge it into the main mailbox
+        fs.writeFile('data.json', JSON.stringify(msgs), function (err) {
+          if (err) console.log("");
+        });
+      });
+      //Done.
+      res.redirect('/account-created');
     }else{
-      res.send("Dude.")
+      res.send("An account with this username has already been created.<br><a href='/signup'>Create a new account</a>")
     }
   });
 })
@@ -154,11 +170,15 @@ server.listen(3000, () => {
 function generate_token(){
   token = ""
   chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`~!@#$%^&*()_+1234567890]}[{,<.>/?".split("")
+  // "Take a random item from a newly shuffled list of chars 32 times"
   for (let looper = 0;looper < 32;looper++){
     token += shuffle(chars)[randint(0,chars.length-1)]
   }
   return token
 }
+
+//Thank you stackoverflow
+
 function shuffle(array) {
   var currentIndex = array.length,  randomIndex;
 
@@ -176,6 +196,9 @@ function shuffle(array) {
 
   return array;
 }
+
+//I made this RANDom INTiger (RANDINT) generator myself. 
+
 function randint(a, b){
     randum =Math.ceil((Math.random() *  (b-a))-1)+a-1
     return Math.abs(randum)
