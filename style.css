@@ -1,0 +1,136 @@
+*{
+  --cyan:#009fad;
+  --mainsize:75vw;
+}
+html{
+  background-image:url("https://artofproblemsolving.com/assets/images/top/pattern-online-gray.png")
+}
+body{
+  margin:0px;
+}
+/* The Modal (background) */
+.modal {
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto; /* 15% from the top and centered */
+  padding: 20px;
+  margin-top:100px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+.forminput{
+  width:calc(98% - 50px);
+  margin-bottom:5px;
+  padding:5px;
+  border:none;
+  outline:none;
+  margin-left:10px;
+  padding:15px;
+}
+.forminput:focus{
+  background-color:#ddd;
+}
+input[type=submit], #logout{
+cursor:pointer;
+  padding:10px;
+  background-color:#007bff;
+  border:none;
+  border-radius:8px;
+  color:white;
+  outline:none;
+  text-align:center;
+}
+input[type=submit]{
+  width:20%;
+}
+
+main{
+  width:var(--mainsize);
+  margin-left:12.5vw;
+  background-color:white;
+  height:100vh;
+}
+.header{
+  background-color:var(--cyan);
+  color:white;
+  font-weight:bolder;
+  padding:10px;
+  height:15px;
+  width:calc(var(--mainsize) - 20px);
+}
+aside{
+  position:Absolute;
+  right:calc((100vw - var(--mainsize))/2 + 10px);
+  top:40px;
+}
+.mail_cont{
+  width:var(--mainsize);
+  height:20px;
+  padding:10px 0px 10px 0px;
+  display:inline-grid;
+  grid-template-columns:40px 150px 150px calc(var(--mainsize) - 520px) 180px;
+}
+.mail_cont:hover{
+  background-color:lightgray;
+}
+.mail_cont>th{
+  text-align:left;
+}
+.message_container{display:flex;}
+th.message_message, th.message_title{
+  height:40px;
+  overflow:hidden;
+  white-space: nowrap; 
+}
+.message_sent_time{
+  margin-left:10px;
+}
+a{
+  color:#007bff !important;
+  text-decoration:none;
+}
+#beg4contrib{
+  padding:5px;
+  color:var(--cyan);
+  border:2px var(--cyan) solid;
+  font-weight:bolder;
+  font-size:14px;
+  transition:0.2s;
+}
+#beg4contrib:hover{
+  opacity:0.5;
+  transition:0.2s;
+}
+.message_message{
+  margin-left:10px;
+}
+.close{
+  background-color: red;
+  border:none;
+  color:white;
+  position:absolute;
+  right:calc(10vw - 20px);
+  font-size:24px;
+  font-weight: bolder;
+  top:100px;
+}
+@media only screen and (max-width: 700px) {
+  * {
+    --mainsize:100vw;
+  }
+  main{
+    margin-left:0px;
+  }
+}

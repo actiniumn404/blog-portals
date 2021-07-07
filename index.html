@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Blog Portal</title>
+  <link rel="icon" href="https://artofproblemsolving.com/online-favicon.ico?v=2">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="login" class="modal">
+    <div class="modal-content">
+      <h1>Login</h1>
+      <p>To access the portal, you must sign in</p>
+      <form id="loginform">
+        <input style="display:none;" name="a" value="login" disabled>
+        <label for="username"><b>Username</b></label>
+        <input class="forminput" id="inputusernamelogin" autocomplete="off" name="username" placeholder="Insert AoPS Username" required><br>
+        <label for="password"><b>Password</b></label>
+        <input class="forminput" id="inputpasswordlogin" type="password" name="password" placeholder="Insert Password" required><br>
+        <input type="checkbox" id="keepmelogedin" name="keepmelogedin"><label for="keepmelogedin">Keep me logged in</label><br><br>
+        <input type="submit">
+        <a href="/signup">...Or sign up instead</a><br>
+      </form>   
+    </div>
+  </div>
+  <div id="message" class="modal" style="display:none">
+    <div class="modal-content">
+      <button class="close" onclick="document.getElementById('message').style.display = 'none'">&times;</button>
+      <h2 id="msgtitle" style="font-family:comfortaa">[Loading title please stand by]</h2>
+      <b id="msgfrom">[Loading message from]</b>
+      <span id="msgtimestamp" style="float:right;margin-right:5px;">January 1, 0000, (12:00 AM)</span><br>
+      <span style="color:Gray">To You</span>
+      <br>
+      <span id="msgmsg"><span>
+    </div>
+  </div>
+  <main>
+    <div id="usernamedisplay" class="header">Pending Username</div>
+    <img id="avatar" src="https://avatar.artofproblemsolving.com/no-avatar.png" height="100px" width="100px">
+    <aside>
+      <span id="titlerole">Visitor/No role in blog</span><br>
+      Status: <span id="status">Active</span><br>
+      <button id="beg4contrib" style="display:none;">Ask for Contrib</button>
+      <button id="logout" onclick="delete_all_cookies();location.reload()">Logout</button>
+    </aside>
+    <div class="header">Messages</div>
+    <table id="message_container">
+      <tr><th>You have no messages</th></tr>
+    </table>
+  </main>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/script.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+    </script>
+</body>
+</html>
