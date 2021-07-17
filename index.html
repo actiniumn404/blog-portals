@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Blog Portal</title>
+  <title>AoPS Blog Portal</title>
   <link rel="icon" href="https://artofproblemsolving.com/online-favicon.ico?v=2">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="style.css">
 </head>
@@ -13,7 +15,6 @@
       <h1>Login</h1>
       <p>To access the portal, you must sign in</p>
       <form id="loginform">
-        <input style="display:none;" name="a" value="login" disabled>
         <label for="username"><b>Username</b></label>
         <input class="forminput" id="inputusernamelogin" autocomplete="off" name="username" placeholder="Insert AoPS Username" required><br>
         <label for="password"><b>Password</b></label>
@@ -24,10 +25,49 @@
       </form>   
     </div>
   </div>
+  <div id="editor" class="modal" >
+    <div class="modal-content">
+      <form action="/messages/log">
+        <div id="headermsg">
+          <input name="from" id="mesgfrom">
+          <label for="to">To</label><input id="msegtoo" name="to" placeholder="Who should this be sent too?" autocomplete="off" required><span id="editorclose" onclick="$('#editor').hide()">&times;</span>
+          <span style="color:white;">(tips: to send a message to the admins, send the message to the name, <span style="background-color:purple">admins</span> To send messages to all the contributors and the admins, send the message to <span style="background-color:purple;">all_contributors</span>)</span><br>
+          <label for="title">Subject</label><input name="title" placeholder="What should this message be about?" id="msegsub" autocomplete="off" required>
+          <input name="timestamp" id="mesgtime" >
+          <input name="token" id="tokennn">
+          <input name="id" id="msegid">
+        </div>
+        <div id="messageeditor">
+          This editor uses <i>bbcode.</i> (I made my own parser :) ) <input type="submit">
+          <textarea id="realmessage" name="msg"></textarea>
+        </div>
+        </form>
+        <div id="toolbar">
+            <button onclick="inserttext('[b]', '[/b]')"><span class="fa fa-bold"></span></button>
+            <button onclick="inserttext('[code=lang]', '[/code]')"><span class="fa fa-code"></span></button>
+            <button onclick="inserttext('[color=#bada55]', '[/color]')"><span class="fa fa-paint-brush"></span></button>
+            <button onclick="inserttext('[font=monospace]', '[/font]')"><span class="fa fa-font"></span></button>
+            <button onclick="inserttext('[i]', '[/i]')"><span class="fa fa-italic"></span></button>
+            <button onclick="inserttext('[img]', '[/img]')"><span class="fa fa-image"></span></button>
+            <button onclick="inserttext('$', '$')"><span class="fa fa-square-root-alt"></span></button>
+            <button onclick="inserttext('[quote]', '[/quote]')"><span class="fa fa-quote-left"></span></button>
+            <button onclick="inserttext('[hide]', '[/hide]')"><span class="fa fa-eye-slash"></span></button>
+            <button onclick="inserttext('[rule]', '')"><span class="fa fa-grip-lines"></span></button>
+            <button onclick="inserttext('[u]', '[/u]')"><span class="fa fa-underline"></span></button>
+            <button onclick="inserttext('[url]', '[/url]')"><span class="fa fa-link"></span></button>
+            <button onclick="inserttext('[size=12px]', '[/size]')"><span class="fa fa-text-height"></span></button>
+            <button onclick="inserttext('[youtube=url]', '[/youtube]')"><span class="fa">YouTube</span></button>
+            <button onclick="$('#previewmsg').html(bbcodeparse($('#realmessage').val()));MathJax.typeset()")><span class="fa fa-refresh fa-spin"></span></button>
+          </div>
+          Preview
+          <div id="previewmsg">
+          </div>
+    </div>
+  </div>
   <div id="message" class="modal" style="display:none">
     <div class="modal-content">
       <button class="close" onclick="document.getElementById('message').style.display = 'none'">&times;</button>
-      <h2 id="msgtitle" style="font-family:comfortaa">[Loading title please stand by]</h2>
+      <h2 id="msgtitle">[Loading title please stand by]</h2>
       <b id="msgfrom">[Loading message from]</b>
       <span id="msgtimestamp" style="float:right;margin-right:5px;">January 1, 0000, (12:00 AM)</span><br>
       <span style="color:Gray">To You</span>
@@ -36,14 +76,15 @@
     </div>
   </div>
   <main>
-    <div id="usernamedisplay" class="header">Pending Username</div>
+    <div><div id="usernamedisplay" class="header">Pending Username</div>
     <img id="avatar" src="https://avatar.artofproblemsolving.com/no-avatar.png" height="100px" width="100px">
     <aside>
       <span id="titlerole">Visitor/No role in blog</span><br>
-      Status: <span id="status">Active</span><br>
-      <button id="beg4contrib" style="display:none;">Ask for Contrib</button>
-      <button id="logout" onclick="delete_all_cookies();location.reload()">Logout</button>
-    </aside>
+      Status: <span id="status">Active</span>
+      <button id="beg4contrib" style="display:none;margin:2.5px;" onclick="request_contrib()">Ask for Contrib</button><br>
+      <button style="margin:2.5px;" onclick="$('#editor').show();$('#msegtoo, #msegsub, #realmessage').val('');$('#previewmsg').html('')">Compose New Message</button><br>
+      <button id="logout" style="margin:2.5px;" onclick="delete_all_cookies();location.reload()">Logout</button>
+    </aside></div>
     <div class="header">Messages</div>
     <table id="message_container">
       <tr><th>You have no messages</th></tr>
@@ -51,9 +92,5 @@
   </main>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="/script.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-      var socket = io();
-    </script>
 </body>
 </html>

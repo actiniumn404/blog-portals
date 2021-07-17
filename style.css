@@ -55,7 +55,9 @@ cursor:pointer;
 input[type=submit]{
   width:20%;
 }
-
+main >div{
+  height:170px;
+}
 main{
   width:var(--mainsize);
   margin-left:12.5vw;
@@ -71,9 +73,8 @@ main{
   width:calc(var(--mainsize) - 20px);
 }
 aside{
-  position:Absolute;
-  right:calc((100vw - var(--mainsize))/2 + 10px);
-  top:40px;
+  margin-right:10px;
+  float:right;
 }
 .mail_cont{
   width:var(--mainsize);
@@ -133,4 +134,86 @@ a{
   main{
     margin-left:0px;
   }
+}
+#editor, #mesgfrom, #mesgtime, #tokennn, #msegid{
+  display:none;
+}
+#editor > .modal-content{
+  width:50% !important;
+  padding:0px;
+  border:10px solid white;
+}
+#editor label{
+  display:inline-block;
+  color:white;
+  width:60px;
+  text-align:right;
+  margin-right:5px;
+  margin-top:15px;
+  margin-bottom:10px;
+}
+#editor form input{
+  outline:none;
+  width:calc(95% - 70px);
+  height:26px;
+}
+
+#toolbar button{
+  border:0;
+  font-size:18px;
+  margin:2px;
+  padding:5px;
+  transition: ease 0.3s;
+}
+#toolbar button:hover{
+  background-color:lightgray;
+  transition: ease 0.3s;
+}
+#realmessage{
+  height:200px;
+  width:100%;
+  resize: none;
+  outline: none;
+}
+.yt:before{content:"\f16a";}
+.fa-refresh:before{content:"\f021"}
+
+.hidetag:hover {
+  text-decoration: none;
+  color: #fff;
+  background-color: #e06800;
+}
+.hidetag{
+  color:#e06800;
+  border-radius:2px;
+  background-color:#f9e1cc;
+  padding:2px;
+}
+.hidetagcontent{
+  display:none;
+  background-color:rgb(214, 214, 214);
+  border-radius:10px;
+  padding:5px;
+  margin:5px;
+}
+#headermsg{
+  width:100%;
+  background-color:#262626;
+  padding:5px;
+}
+#editorclose{
+  float:right;
+  color:white;
+  font-size:24px;
+  font-weight:bolder;
+}
+#previewmsg{
+  width:98%;
+  height:200px;
+  border:1px solid black;
+  padding:5px;
+  overflow:auto;
+}
+#msgtitle{
+  font-family:comfortaa;
 }

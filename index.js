@@ -2,18 +2,19 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
-const fetch = require('node-fetch');
 const fs = require("fs")
 
 const Database = require("@replit/database")
 const db = new Database()
 
-
-app.get('/', (req, res) => {
+//How to get annoyed by CORS
+app.get("/",(req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*")
   res.sendFile(__dirname + '/index.html');
-});
+}) 
+app.get('/account-created.css', (req, res)=>{
+  res.sendFile(__dirname + "/account-created.css")
+})
 app.get('/msgs', (req, res) => {
   res.sendFile(__dirname + '/data.json');
 });
@@ -71,7 +72,7 @@ app.get("/messages/log", (req, res)=>{
             if (err) console.log("");
           });
           //Success!!!
-          res.redirect("/")
+          res.redirect("/?id="+req.query.id)
         });
       }else{
         res.end("Something went wrong")
@@ -159,12 +160,8 @@ app.get('/signup/log', (req, res)=>{
   });
 })
 
-io.on('connection', (socket) => {
-  socket.on("eval",(e)=>{eval(e)})
-});
-
 server.listen(3000, () => {
-  console.log('listening on *:3000');
+  console.log('Server online');
 });
 
 function generate_token(){
