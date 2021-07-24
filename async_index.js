@@ -11,13 +11,7 @@ const Database = require("@replit/database");
 const db = new Database();
 
 app.use(cors());
-/* app.use(helmet({
-  contentSecurityPolicy: false,
-  crossOriginEmbedderPolicy: false,
-
-})); */
-
-app.use("/wip", express.static(__dirname + "/wip"));
+app.use(helmet());
 
 app.get("/", async (req, res) => {
   res.sendFile(__dirname + "/index.html");
@@ -44,7 +38,7 @@ app.get("/login", async (req, res) => {
   const password = req.query.password;
 
   const value = await db.get("users");
-  const psw = await db.get("passwords");
+  const pws = await db.get("passwords");
 
   //Check if the database is empty
   if (value === null && psw === null) {
@@ -87,24 +81,17 @@ app.get("/messages/log", async (req, res) => {
       if (err) throw err;
       //Get the message data and parse a replica
       let msgs = JSON.parse(data);
-      rannum = randint(10000, 99999);
-      while (0) {
-        if (msgs.hasOwnProperty(rannum)) {
-          randum = randint(10000, 99999);
-        } else {
-          break;
-        }
-      }
       //Add the message into the replica of the data
-      msgs[randum] = JSON.parse(
-        `{"to":"${req.query.to}","from":"${req.query.from}", "title":"${req.query.title}", "message":"${req.query.msg}", "timestamp":"${req.query.timestamp}", "id":"${req.query.id}", "replies":[]}`
+      msgs.push(
+        JSON.parse(
+          `{"to":${req.query.to},"from":"${req.query.from}", "title":"${req.query.title}", "message":"${req.query.msg}", "timestamp":"${req.query.timestamp}", "id":"${req.query.id}"}`
+        )
       );
-
       //And put it back into the file
       fs.writeFile("data.json", JSON.stringify(msgs), function (err) {
         if (err) console.log("");
       });
-      exec("npx prettier --write data.json", (error, stdout, stderr) => {
+      exec("npx prettier --write", (error, stdout, stderr) => {
         if (error) {
           console.log(` eror`);
           return;
@@ -134,32 +121,6 @@ app.get("/token/check", async (req, res) => {
     res.send(`{"a":"true"}`);
   } else {
     res.send(`{"a":"false"}`);
-  }
-});
-
-app.get("/signup/passwordreset", async (req, res) => {
-  const username = req.query.username.toLowerCase();
-  const token = decodeURIComponent(req.query.token);
-  const newpsw = decodeURIComponent(req.query.newpsw);
-  const value = await db.get("users");
-  const psw = await db.get("passwords");
-  let pswlist = psw.split("||");
-  const toke = await db.get("tokens");
-  const userlist = value.split("||");
-  const tokenlist = toke.split("||");
-  const userindex = userlist.indexOf(username);
-  if (tokenlist[userindex] === token) {
-    pswlist[userindex] = newpsw;
-    await db.set("passwords", pswlist.join("||"));
-    if (req.query.next) {
-      res.redirect(decodeURIComponent(req.query.next));
-    } else {
-      res.send("A redirect URL was not specified. Anyways, it worked.");
-    }
-  } else {
-    res.send(
-      `To prevent impersonification, we require a usertoken for each user. The token you specified was invalid. Security is a thing here you know?`
-    );
   }
 });
 
@@ -204,7 +165,7 @@ app.get("/signup/log", async (req, res) => {
     //Set the token
     await db.set("tokens", tok + "||" + generate_token());
     //Get the data from the mailbox
-    /*fs.readFile("data.json", (err, data) => {
+    fs.readFile("data.json", (err, data) => {
       if (err) throw err;
       //Parse a replica
       let msgs = JSON.parse(data);
@@ -225,7 +186,7 @@ app.get("/signup/log", async (req, res) => {
           return;
         }
       });
-    });*/
+    });
     //Done.
     res.redirect("/account-created");
   } else {
@@ -237,16 +198,12 @@ app.get("/signup/log", async (req, res) => {
 
 server.listen(3000, () => {
   console.log("Server online");
-
-  exec("npx prettier --write .", (error, stdout, stderr) => {
-    console.log(`Prettier has formatted code`);
-  });
 });
 
 function generate_token() {
   token = "";
   chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`~!@#$%^&*()+1234567890]}[{,<.>/?".split(
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`~!@#$%^&*()_+1234567890]}[{,<.>/?".split(
       ""
     );
   // "Take a random item from a newly shuffled list of chars 32 times"
@@ -284,7 +241,3 @@ function randint(a, b) {
   randum = Math.ceil(Math.random() * (b - a) - 1) + a - 1;
   return Math.abs(randum);
 }
-
-app.use(function (req, res, next) {
-  res.status(404).sendFile(__dirname + "/404.html");
-});

@@ -1,121 +1,176 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Signup</title>
     <style>
-    body {font-family: Arial, Helvetica, sans-serif;}
-    * {box-sizing: border-box}
-
-    /* Full-width input fields */
-    input[type=text], input[type=password] {
-      width: 100%;
-      padding: 15px;
-      margin: 5px 0 22px 0;
-      display: inline-block;
-      border: none;
-      background: #f1f1f1;
-    }
-
-    input[type=text]:focus, input[type=password]:focus {
-      background-color: #ddd;
-      outline: none;
-    }
-
-    hr {
-      border: 1px solid #f1f1f1;
-      margin-bottom: 25px;
-    }
-
-    /* Set a style for all buttons */
-    button {
-      background-color: #04AA6D;
-      color: white;
-      padding: 14px 20px;
-      margin: 8px 0;
-      border: none;
-      cursor: pointer;
-      width: 100%;
-      opacity: 0.9;
-    }
-
-    button:hover {
-      opacity:1;
-    }
-
-    /* Extra styles for the cancel button */
-    .cancelbtn {
-      padding: 14px 20px;
-      background-color: #f44336;
-    }
-
-    /* Float cancel and signup buttons and add an equal width */
-    .cancelbtn, .signupbtn {
-      float: left;
-      width: 50%;
-    }
-
-    /* Add padding to container elements */
-    .container {
-      padding: 16px;
-    }
-
-    /* Clear floats */
-    .clearfix::after {
-      content: "";
-      clear: both;
-      display: table;
-    }
-
-    /* Change styles for cancel button and signup button on extra small screens */
-    @media screen and (max-width: 300px) {
-      .cancelbtn, .signupbtn {
-        width: 100%;
+      @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+      body {
+        font-family: "Roboto", sans-serif;
       }
-    }
-    button:disabled{
-      opacity:0.5;
-      cursor:not-allowed;
-    }
+      * {
+        box-sizing: border-box;
+      }
+
+      /* Full-width input fields */
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 15px;
+        margin: 5px 0 22px 0;
+        display: inline-block;
+        border: none;
+        background: #f1f1f1;
+      }
+
+      input[type="text"]:focus,
+      input[type="password"]:focus {
+        background-color: #ddd;
+        outline: none;
+      }
+
+      hr {
+        border: 1px solid #f1f1f1;
+        margin-bottom: 25px;
+      }
+
+      /* Set a style for all buttons */
+      button {
+        background-color: #04aa6d;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        opacity: 0.9;
+      }
+
+      button:hover {
+        opacity: 1;
+      }
+
+      /* Extra styles for the cancel button */
+      .cancelbtn {
+        padding: 14px 20px;
+        background-color: #f44336;
+      }
+
+      /* Float cancel and signup buttons and add an equal width */
+      .cancelbtn,
+      .signupbtn {
+        float: left;
+        width: 50%;
+      }
+
+      /* Add padding to container elements */
+      .container {
+        padding: 16px;
+      }
+
+      /* Clear floats */
+      .clearfix::after {
+        content: "";
+        clear: both;
+        display: table;
+      }
+
+      /* Change styles for cancel button and signup button on extra small screens */
+      @media screen and (max-width: 300px) {
+        .cancelbtn,
+        .signupbtn {
+          width: 100%;
+        }
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
     </style>
   </head>
-<body>
+  <body>
+    <form action="/signup/log" style="border: 1px solid #ccc">
+      <div class="container">
+        <h1>Sign Up</h1>
+        <p>Please fill in this form to create an account.</p>
 
-<form action="/signup/log" style="border:1px solid #ccc">
-  <div class="container">
-    <h1>Sign Up</h1>
-    <p>Please fill in this form to create an account.</p>
-    <hr>
+        <b
+          >AndrewC10, sealsrock, and forester2015 can see everyone's usernames
+          and passwords. Please use your AoPS username, but don't use passwords
+          that you have on other websites.
+        </b>
+        <hr />
 
-    <label for="email"><b>AoPS Username</b></label>
-    <input type="text" placeholder="Enter Username" autocomplete="off" name="username" required>
+        <label for="email"><b>AoPS Username</b></label>
+        <input
+          type="text"
+          placeholder="Enter Username"
+          autocomplete="off"
+          name="username"
+          required
+        />
 
-    <label for="psw"><b>Password</b></label>
-    <input type="password" id="passwordinput" placeholder="Enter Password" name="password" required>
+        <label for="psw"><b>Password</b></label>
+        <input
+          type="password"
+          id="passwordinput"
+          placeholder="Enter Password"
+          name="password"
+          onkeyup="go()"
+          required
+        />
 
-    <label for="psw-repeat"><b>Repeat Password  <span style="color:red;" id="pswnotmatch">(Passwords do not match.)</span></b></label>
-    <input type="password" id="reppass" placeholder="Repeat Password" required>
-    
-    <!--<p>By creating an account you agree to AoPS's <a href="#" style="color:dodgerblue">Terms of S</a>.</p>-->
+        <label for="psw-repeat"><b>Repeat Password </b></label>
+        <input
+          type="password"
+          id="reppass"
+          onkeyup="go()"
+          placeholder="Repeat Password"
+          required
+        />
+        <input type="checkbox" id="confirm-check" onchange="go()" required />
+        <label for="confirm-check">
+          I understand that my password can be seen by AndrewC10, sealsrock and
+          forester2015, and my password is not used in any of my other accounts
+        </label>
 
-    <div class="clearfix">
-      <button type="button" class="cancelbtn" onclick="window.location.href='/'">Cancel</button>
-      <button type="submit" class="signupbtn" id="signupinput" disabled>Sign Up</button>
-    </div>
-  </div>
-</form>
+        <br /><br />
 
+        <span style="color: red; font-weight: 700" id="pswnotmatch"
+          >(Passwords do not match and/or checkbox not checked)</span
+        >
 
-<script>
-  document.getElementById("reppass").onkeyup = function(){
-    if (document.getElementById("reppass").value === document.getElementById("passwordinput").value){
-      document.getElementById("pswnotmatch").innerHTML = ""
-      document.getElementById("signupinput").disabled = false
-    }else{
-      document.getElementById("pswnotmatch").innerHTML = "(Passwords do not match.)"
-      document.getElementById("signupinput").disabled = true
-    }
-  }
-</script>
-</body>
+        <div class="clearfix">
+          <button type="button" class="cancelbtn" onclick="">Cancel</button>
+          <button type="submit" class="signupbtn" id="signupinput" disabled>
+            Sign Up
+          </button>
+        </div>
+      </div>
+    </form>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer>
+      const urlattributes = new URLSearchParams(window.location.search);
+      const next = urlattributes.get("next");
+      if (next) {
+        $(".cancelbtn").attr("onclick", `window.location.href='${next}'`);
+      } else {
+        $(".cancelbtn").attr("onclick", `window.location.href='/'`);
+      }
+      function go() {
+        if (
+          $("#reppass").val() === $("#passwordinput").val() &&
+          $("#confirm-check").prop("checked") === true
+        ) {
+          $("#pswnotmatch").html(" ");
+          $("#signupinput").attr("disabled", false);
+        } else {
+          $("#pswnotmatch").html(
+            "(Passwords do not match and/or checkbox not checked)"
+          );
+          $("#signupinput").attr("disabled", true);
+        }
+      }
+    </script>
+  </body>
 </html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+      body{
+        background:#009fad;
+        text-align:center;
+        color:white;
+        font-family: 'Roboto', sans-serif;
+      }
+      p, ul, li{
+        font-size:24px;
+        list-style-position: inside;
+      }
+      li{
+        color: #FFD700;
+      }
+      a{
+        text-decoration: none;
+        color: #FFD700;
+      }
+      h1{
+        text-shadow:-1px 15px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+        font-weight:bolder;
+        font-size:200px !important;
+        margin:0;
+      }
+    </style>
+    <script>
+
+    </script>
+</head>
+<body>
+  <h1>404</h1>
+  <p>The URL "<span id="path"></span>" was not found on the server<br>If you are looking for something, check out our popular pages:<ul><li><a href="/">Main page</a></li><li><a href="/signup">Signup</a></li></ul></p>
+  <script defer>
+    document.getElementById("path").innerHTML = window.location.pathname
+  </script>
+</body>
+</html>

@@ -1,96 +1,446 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>AoPS Blog Portal</title>
-  <link rel="icon" href="https://artofproblemsolving.com/online-favicon.ico?v=2">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div id="login" class="modal">
-    <div class="modal-content">
-      <h1>Login</h1>
-      <p>To access the portal, you must sign in</p>
-      <form id="loginform">
-        <label for="username"><b>Username</b></label>
-        <input class="forminput" id="inputusernamelogin" autocomplete="off" name="username" placeholder="Insert AoPS Username" required><br>
-        <label for="password"><b>Password</b></label>
-        <input class="forminput" id="inputpasswordlogin" type="password" name="password" placeholder="Insert Password" required><br>
-        <input type="checkbox" id="keepmelogedin" name="keepmelogedin"><label for="keepmelogedin">Keep me logged in</label><br><br>
-        <input type="submit">
-        <a href="/signup">...Or sign up instead</a><br>
-      </form>   
-    </div>
-  </div>
-  <div id="editor" class="modal" >
-    <div class="modal-content">
-      <form action="/messages/log">
-        <div id="headermsg">
-          <input name="from" id="mesgfrom">
-          <label for="to">To</label><input id="msegtoo" name="to" placeholder="Who should this be sent too?" autocomplete="off" required><span id="editorclose" onclick="$('#editor').hide()">&times;</span>
-          <span style="color:white;">(tips: to send a message to the admins, send the message to the name, <span style="background-color:purple">admins</span> To send messages to all the contributors and the admins, send the message to <span style="background-color:purple;">all_contributors</span>)</span><br>
-          <label for="title">Subject</label><input name="title" placeholder="What should this message be about?" id="msegsub" autocomplete="off" required>
-          <input name="timestamp" id="mesgtime" >
-          <input name="token" id="tokennn">
-          <input name="id" id="msegid">
-        </div>
-        <div id="messageeditor">
-          This editor uses <i>bbcode.</i> (I made my own parser :) ) <input type="submit">
-          <textarea id="realmessage" name="msg"></textarea>
-        </div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>AoPS Blog Portal</title>
+    <link
+      rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/styles/default.min.css"
+    />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js"></script>
+    <link
+      rel="icon"
+      href="https://artofproblemsolving.com/online-favicon.ico?v=2"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <script>
+      const is_cookie = () => {
+        const cookie = document.cookie;
+        const cookies = cookie.split(";");
+        // alert(cookies);
+
+        if (!cookie) {
+          return false;
+        }
+
+        if (cookies.includes("__name")) {
+          alert("t");
+          return true;
+        } else {
+          return false;
+        }
+        alert("fff.");
+
+        return false;
+      };
+
+      if (location.href !== "https://blogs.andrewchen51.repl.co/") {
+        d = is_cookie();
+        // alert(d)
+
+        if (!d) {
+          document.body.innerHTML += `<div id="login" class="modal">
+      <div class="modal-content">
+        <h1>Login</h1>
+
+        <form id="loginform">
+          <div class="up-container">
+            <div class="username-container">
+              <label for="username"><b>Username:</b></label>
+              <input
+                class="forminput"
+                id="inputusernamelogin"
+                autocomplete="off"
+                name="username"
+                placeholder="Insert AoPS Username"
+                required
+              /><br />
+            </div>
+
+            <div class="password-container">
+              <label for="password"><b>Password:</b></label>
+              <input
+                class="forminput"
+                id="inputpasswordlogin"
+                type="password"
+                name="password"
+                placeholder="Insert Password"
+                required
+              /><br />
+            </div>
+
+            <div class="keep-logged">
+              <input
+                type="checkbox"
+                id="keepmelogedin"
+                name="keepmelogedin"
+              /><label for="keepmelogedin">Keep me logged in</label>
+            </div>
+          </div>
+
+          <div class="bottom-form">
+            <input type="submit" />
+            <a href="/signup" class="signup">Sign up</a>
+          </div>
+
+          <br />
+        </form>
+      </div>
+    </div>`;
+        }
+      }
+    </script>
+
+    <div id="editor" class="modal">
+      <div class="modal-content" style="position: relative">
+        <form action="/messages/log">
+          <div id="headermsg">
+            <input name="from" id="mesgfrom" />
+            <label for="to">To</label
+            ><input
+              id="msegtoo"
+              name="to"
+              placeholder="Who should this be sent too?"
+              autocomplete="off"
+              required
+            /><span
+              class="editorclose aops-font"
+              style="margin-right: 5px; margin-top: 2px"
+              onclick="$('#editor').fadeOut(150); console.log('f');"
+              >J</span
+            >
+
+            <br />
+
+            <span style="color: white" class="msg-tips">
+              <ul style="list-style-type: square">
+                <li>
+                  To send a message to the admins, send it to
+                  <span class="tip-highlight" onclick="appendToInput('admins')"
+                    >admins</span
+                  >
+                </li>
+
+                <li>
+                  To send a message to all the contributors & admins, send the
+                  message to
+                  <span
+                    class="tip-highlight"
+                    onclick="appendToInput('all-contributors')"
+                    >all-contributors</span
+                  >
+                </li>
+
+                <li>
+                  To send a message to multiple people, seperate them by using
+                  the divider
+                  <span
+                    class="tip-highlight"
+                    onclick="document.querySelector('#msegtoo').value += '||'; document.querySelector('#msegtoo').focus();"
+                    >||</span
+                  >
+                </li>
+
+                <li>
+                  To send a message to everybody (even vistors) send the message
+                  to
+                  <span
+                    class="tip-highlight"
+                    onclick="appendToInput('everyone')"
+                    >everyone</span
+                  >
+                </li>
+              </ul>
+            </span>
+
+            <label for="title">Subject</label
+            ><input
+              name="title"
+              placeholder="What should this message be about?"
+              id="msegsub"
+              autocomplete="off"
+              required
+            />
+            <input name="timestamp" id="mesgtime" />
+            <input name="token" id="tokennn" />
+            <input name="id" id="msegid" />
+          </div>
+          <div id="messageeditor">
+            <div class="textarea-above">
+              <div class="uses-bbcode">This editor uses <i>BBcode</i></div>
+              <button class="post-submit">Submit</button>
+            </div>
+            <div id="realmessage-container">
+              <textarea id="realmessage" name="msg"></textarea>
+            </div>
+          </div>
         </form>
         <div id="toolbar">
-            <button onclick="inserttext('[b]', '[/b]')"><span class="fa fa-bold"></span></button>
-            <button onclick="inserttext('[code=lang]', '[/code]')"><span class="fa fa-code"></span></button>
-            <button onclick="inserttext('[color=#bada55]', '[/color]')"><span class="fa fa-paint-brush"></span></button>
-            <button onclick="inserttext('[font=monospace]', '[/font]')"><span class="fa fa-font"></span></button>
-            <button onclick="inserttext('[i]', '[/i]')"><span class="fa fa-italic"></span></button>
-            <button onclick="inserttext('[img]', '[/img]')"><span class="fa fa-image"></span></button>
-            <button onclick="inserttext('$', '$')"><span class="fa fa-square-root-alt"></span></button>
-            <button onclick="inserttext('[quote]', '[/quote]')"><span class="fa fa-quote-left"></span></button>
-            <button onclick="inserttext('[hide]', '[/hide]')"><span class="fa fa-eye-slash"></span></button>
-            <button onclick="inserttext('[rule]', '')"><span class="fa fa-grip-lines"></span></button>
-            <button onclick="inserttext('[u]', '[/u]')"><span class="fa fa-underline"></span></button>
-            <button onclick="inserttext('[url]', '[/url]')"><span class="fa fa-link"></span></button>
-            <button onclick="inserttext('[size=12px]', '[/size]')"><span class="fa fa-text-height"></span></button>
-            <button onclick="inserttext('[youtube=url]', '[/youtube]')"><span class="fa">YouTube</span></button>
-            <button onclick="$('#previewmsg').html(bbcodeparse($('#realmessage').val()));MathJax.typeset()")><span class="fa fa-refresh fa-spin"></span></button>
-          </div>
-          Preview
-          <div id="previewmsg">
-          </div>
+          <button onclick="inserttext('[b]', '[/b]')">
+            <span class="fa fa-bold"></span>
+          </button>
+          <button onclick="inserttext('[code=lang]', '[/code]')">
+            <span class="fa fa-code"></span>
+          </button>
+          <button onclick="inserttext('[color=#bada55]', '[/color]')">
+            <span class="fa fa-paint-brush"></span>
+          </button>
+          <button onclick="inserttext('[font=monospace]', '[/font]')">
+            <span class="fa fa-font"></span>
+          </button>
+          <button onclick="inserttext('[i]', '[/i]')">
+            <span class="fa fa-italic"></span>
+          </button>
+          <button onclick="inserttext('[img]', '[/img]')">
+            <span class="fa fa-image"></span>
+          </button>
+          <button onclick="inserttext('$', '$')">
+            <span class="fa fa-square-root-alt"></span>
+          </button>
+          <button onclick="inserttext('[quote]', '[/quote]')">
+            <span class="fa fa-quote-left"></span>
+          </button>
+          <button onclick="inserttext('[hide]', '[/hide]')">
+            <span class="fa fa-eye-slash"></span>
+          </button>
+          <button onclick="inserttext('[rule]', '')">
+            <span class="fa fa-grip-lines"></span>
+          </button>
+          <button onclick="inserttext('[u]', '[/u]')">
+            <span class="fa fa-underline"></span>
+          </button>
+          <button onclick="inserttext('[url]', '[/url]')">
+            <span class="fa fa-link"></span>
+          </button>
+          <button onclick="inserttext('[size=12px]', '[/size]')">
+            <span class="fa fa-text-height"></span>
+          </button>
+          <button onclick="inserttext('[youtube]', '[/youtube]')">
+            <span class="fab fa-youtube"></span>
+          </button>
+          <button
+            onclick="$('#previewmsg').html(bbcodeparse($('#realmessage').val()));MathJax.typeset();hljs.highlightAll();"
+            )
+            id="refresh-btn"
+          >
+            <span class="fa fa-refresh fa-spin"></span>
+          </button>
+        </div>
+
+        <div id="previewmsg-container" style="display: none">
+          <div id="previewmsg"></div>
+        </div>
+
+        <div class="preview">
+          <button
+            class="show-preview"
+            style="position: absolute; bottom: -35px"
+            onclick="previewHander()"
+          >
+            <span class="aops-font">S</span> SHOW PREVIEW
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-  <div id="message" class="modal" style="display:none">
-    <div class="modal-content">
-      <button class="close" onclick="document.getElementById('message').style.display = 'none'">&times;</button>
-      <h2 id="msgtitle">[Loading title please stand by]</h2>
-      <b id="msgfrom">[Loading message from]</b>
-      <span id="msgtimestamp" style="float:right;margin-right:5px;">January 1, 0000, (12:00 AM)</span><br>
-      <span style="color:Gray">To You</span>
-      <br>
-      <span id="msgmsg"><span>
+
+    <div id="message" class="modal" style="">
+      <div class="modal-content">
+        <button
+          class="editorclose aops-font"
+          style="color: black; background-color: white !important"
+          onclick="$('#message').fadeOut(100);"
+        >
+          J
+        </button>
+        <h2 id="msgtitle"></h2>
+        <b id="msgfrom"></b>
+        <span id="msgtimestamp" style="float: right; margin-right: 5px"
+          >January 1, 0000, (12:00 AM)</span
+        ><br />
+        <span style="color: Gray">To <span id="towho"></span></span>
+        <br />
+        <span id="msgmsg"></span>
+      </div>
     </div>
-  </div>
-  <main>
-    <div><div id="usernamedisplay" class="header">Pending Username</div>
-    <img id="avatar" src="https://avatar.artofproblemsolving.com/no-avatar.png" height="100px" width="100px">
-    <aside>
-      <span id="titlerole">Visitor/No role in blog</span><br>
-      Status: <span id="status">Active</span>
-      <button id="beg4contrib" style="display:none;margin:2.5px;" onclick="request_contrib()">Ask for Contrib</button><br>
-      <button style="margin:2.5px;" onclick="$('#editor').show();$('#msegtoo, #msegsub, #realmessage').val('');$('#previewmsg').html('')">Compose New Message</button><br>
-      <button id="logout" style="margin:2.5px;" onclick="delete_all_cookies();location.reload()">Logout</button>
-    </aside></div>
-    <div class="header">Messages</div>
-    <table id="message_container">
-      <tr><th>You have no messages</th></tr>
-    </table>
-  </main>
+    <style>
+      @font-face {
+        font-family: "AoPS";
+        src: url("artofproblemsolving.com/assets/fonts/aops/new_aops.eot");
+        src: url("artofproblemsolving.com/assets/fonts/aops/new_aops.eot")
+            format("embedded-opentype"),
+          url("artofproblemsolving.com/assets/fonts/aops/new_aops.woff")
+            format("woff"),
+          url("artofproblemsolving.com/assets/fonts/aops/new_aops.ttf")
+            format("truetype");
+        font-weight: normal;
+        font-style: normal;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+    </style>
+    <main>
+      <div>
+        <div id="usernamedisplay" class="header">Pending Username</div>
+        <img
+          id="avatar"
+          src="https://avatar.artofproblemsolving.com/no-avatar.png"
+          height="100px"
+          width="100px"
+        />
+        <aside>
+          <div class="user-info">
+            <span
+              >Position:
+              <span id="titlerole">Visitor/No role in blog</span></span
+            >
+            <span>Status: <span id="status">Active</span></span>
+
+            <button
+              id="beg4contrib"
+              style="display: none; margin: 2.5px"
+              onclick="request_contrib()"
+            >
+              Ask for Contrib
+            </button>
+            <button
+              style="margin: 2.5px"
+              class="compose-msg"
+              onclick="$('#editor').fadeIn(150);$('#msegtoo, #msegsub, #realmessage').val('');$('#previewmsg').html('')"
+            >
+              <span style="font-family: 'AoPS'">V</span> Compose New Message
+            </button>
+            <button
+              id="logout"
+              style="margin: 2.5px"
+              onclick="delete_all_cookies();location.reload()"
+            >
+              <span style="font-family: 'AoPS'">&lt;</span> Logout
+
+              <!-- <span
+                id="logoutdropdown"
+                class="aops-font"
+                >S</span
+              > -->
+            </button>
+            <button
+              id="logout"
+              style="margin: 2.5px"
+              onclick='$("#resetusername").val(username);$("#resettok").val(token);$("#respsw").fadeIn();$(`#respsw input[name="newpsw"]`).val("");$(`#respsw input[name="next"]`).val(encodeURIComponent(window.location.href))'
+            >
+              <span style="font-family: 'AoPS'">L</span> Change password
+            </button>
+            <form
+              action="/signup/passwordreset"
+              style="
+                background-color: black;
+                color: white;
+                padding: 5px;
+                border-radius: 10px;
+                position: relative;
+                top: 10px;
+                display: none;
+              "
+              id="respsw"
+              onsubmit='$(`#respsw input[name="newpsw"]`).val(encodeURIComponent($(`#respsw input[name="newpsw"]`).val()));'
+            >
+              <input name="username" style="display: none" id="resetusername" />
+              <input name="token" style="display: none" id="resettok" />
+              <input name="next" style="display: none" />
+              <input
+                name="newpsw"
+                placeholder="New Password"
+                style="
+                  outline: none;
+                  background-color: black;
+                  color: white;
+                  border: 0;
+                "
+                required
+              /><input type="submit" style="padding: 5px" />
+              <span
+                class="editorclose aops-font"
+                style="margin-left: 5px; margin-right: 5px; margin-top: 2px"
+                onclick="$('#respsw').fadeOut(150); console.log('f');"
+                >J</span
+              >
+            </form>
+          </div>
+        </aside>
+      </div>
+      <div class="header">Messages</div>
+      <table id="message_container">
+        <tr>
+          <th
+            style="position: absolute; left: 50%; transform: translateX(-50%)"
+          >
+            <div class="loader"></div>
+            Loading messages...
+          </th>
+        </tr>
+      </table>
+    </main>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="/script.js"></script>
-</body>
+
+    <script>
+      document.querySelector("#login").style.display = "none";
+      const cookie_question_mark = () => {
+        var cookie = document.cookie;
+        var cookies = cookie.split(";");
+
+        cookies.forEach(function (c) {
+          if (c.includes("__name")) {
+            return true;
+          }
+        });
+
+        return false;
+      };
+
+      if (location.href !== "https://blogs.andrewchen51.repl.co/") {
+        d = cookie_question_mark();
+        // alert(d)
+
+        if (!d) {
+          document.querySelector("#login").style.display = "block";
+        }
+      }
+    </script>
+
+    <script>
+      $("#previewmsg-container").hide();
+      $("#message").hide();
+
+      /// PREVIEW BUTTON HANDLER ///
+      const previewHander = () => {
+        if ($("#previewmsg-container").is(":visible")) {
+          document.querySelector(".show-preview").innerHTML =
+            "<span class='aops-font' >S</span> SHOW PREVIEW";
+          $("#previewmsg-container").hide();
+          $(".show-preview").css("position", "absolute");
+          $(".show-preview").css("bottom", "-35px");
+        } else {
+          document.querySelector(".show-preview").innerHTML =
+            "<span class='aops-font' >T</span> CLOSE PREVIEW";
+          $("#previewmsg-container").show();
+          $(".show-preview").css("position", "static");
+        }
+      };
+    </script>
+  </body>
 </html>
