@@ -106,7 +106,7 @@ app.get("/messages/log", async (req, res) => {
       });
       exec("npx prettier --write data.json", (error, stdout, stderr) => {
         if (error) {
-          console.log(` eror`);
+          console.log(` error`);
           return;
         }
         if (stderr) {
@@ -121,7 +121,54 @@ app.get("/messages/log", async (req, res) => {
     res.end("Something went wrong");
   }
 });
+app.get("/messages/reply", async (req, res) => {
+  const username = req.query.username.toLowerCase();
+  const token = decodeURIComponent(req.query.token);
+  const time = req.query.timestamp;
+  const postid = decodeURIComponent(req.query.id.toString());
+  const message = encodeURIComponent(req.query.msg);
 
+  const value = await db.get("users");
+  const toke = await db.get("tokens");
+
+  const userlist = value.split("||");
+  const tokenlist = toke.split("||");
+  const userindex = userlist.indexOf(username);
+
+  //Check using token auth to prevent impersonization
+  if (tokenlist[userindex] === token) {
+    fs.readFile("data.json", (err, data) => {
+      if (err) console.log("Error");
+      //Get the message data and parse a replica
+      let msgs = JSON.parse(data);
+      //Add the message into the replica of the data
+      msgs[postid]["replies"].push(
+        JSON.parse(
+          `{"from":"${username}","timestamp":"${time}", "message":"${message}"}`
+        )
+      );
+
+      //And put it back into the file
+      fs.writeFile("data.json", JSON.stringify(msgs), function (err) {
+        if (err) console.log("");
+      });
+      exec("npx prettier --write data.json", (error, stdout, stderr) => {
+        if (error) {
+          console.log(` error`);
+          return;
+        }
+        if (stderr) {
+          console.log(` `);
+          return;
+        }
+      });
+      //Success!!!
+      res.redirect(decodeURIComponent(req.query.next));
+    });
+  } else {
+    res.end("Something went wrong");
+  }
+});
 app.get("/token/check", async (req, res) => {
   const username = req.query.username.toLowerCase();
   const token = req.query.token;

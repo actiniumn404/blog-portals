@@ -180,7 +180,9 @@ function create_msgs(us) {
             .replace(/\\/g, "\\\\")}\`, \`${time.replace(
             /"/g,
             "&#34;"
-          )}\`);MathJax.typeset();hljs.highlightAll();$('#towho').html('${raw_message.to.replace(
+          )}\`, \`${encodeURIComponent(
+            JSON.stringify(raw_message.replies)
+          )}\`);MathJax.typeset();hljs.highlightAll();$('#msegtoo, #msegsub, #replymessage').val('');$('.replypreview').html('');$('#towho').html('${raw_message.to.replace(
             /\|\|/g,
             ", "
           )}');msgid=${key(data)[counter]};">
@@ -212,11 +214,28 @@ function key(jsonarray) {
   }
   return ac;
 }
-function open_msg(fromm, title, message, timestamp) {
+function open_msg(fromm, title, message, timestamp, replies) {
   $("#msgtitle").html(title);
   $("#msgfrom").html(fromm);
   $("#msgmsg").html(message);
   $("#msgtimestamp").html(timestamp);
+  let replyparse = JSON.parse(decodeURIComponent(replies));
+  $("#replies").html("");
+  if (replyparse !== []) {
+    replyparse.forEach(a => {
+      let newtime = new Date(parseInt(a.timestamp))
+      $("#replies").append(`<div class="reply">
+            <span style="color:gray">${
+              a.from
+            }</span> <span style="float:right;">${newtime.toLocaleDateString() + " " + newtime.toLocaleTimeString()
+      }</span><br>
+            <div class="replymessagemessage">${bbcodeparse(decodeURIComponent(
+              a.message
+            ))}</div>
+            <hr />
+          </div>`);
+    });
+  }
   $("#message").fadeIn(100);
 }
 function getCookie(cname) {
@@ -285,20 +304,21 @@ $("#editor form").submit(e => {
   $("#tokennn").val(token);
 });
 
-function inserttext(starttext, endtext) {
-  let start = $("#realmessage").prop("selectionStart");
-  let end = $("#realmessage").prop("selectionEnd");
-  $("#realmessage").val(
-    $("#realmessage").val().substring(0, start) +
+function inserttext(starttext, endtext, a = "#realmessage") {
+  let start = $(a).prop("selectionStart");
+  let end = $(a).prop("selectionEnd");
+  $(a).val(
+    $(a).val().substring(0, start) +
       starttext +
-      $("#realmessage").val().substring(start, end) +
+      $(a).val().substring(start, end) +
       endtext +
-      $("#realmessage").val().substring(end)
+      $(a).val().substring(end)
   );
-  document.querySelector("#realmessage").focus();
+
   document
-    .querySelector("#realmessage")
+    .querySelector(a)
     .setSelectionRange(start + starttext.length, start + starttext.length);
+  document.querySelector(a).focus();
 }
 
 function bbcodeparse(text) {

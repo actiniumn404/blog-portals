@@ -118,7 +118,7 @@
             /><span
               class="editorclose aops-font"
               style="margin-right: 5px; margin-top: 2px"
-              onclick="$('#editor').fadeOut(150); console.log('f');"
+              onclick="$('#editor').fadeOut(150);"
               >J</span
             >
 
@@ -231,7 +231,7 @@
             <span class="fab fa-youtube"></span>
           </button>
           <button
-            onclick="$('#previewmsg').html(bbcodeparse($('#realmessage').val()));MathJax.typeset();hljs.highlightAll();"
+            onclick="$('.previewmsg').html(bbcodeparse($('#realmessage').val()));MathJax.typeset();hljs.highlightAll();"
             )
             id="refresh-btn"
           >
@@ -239,14 +239,14 @@
           </button>
         </div>
 
-        <div id="previewmsg-container" style="display: none">
-          <div id="previewmsg"></div>
+        <div class="previewmsg-container" style="display: none">
+          <div class="previewmsg"></div>
         </div>
 
         <div class="preview">
           <button
             class="show-preview"
-            style="position: absolute; bottom: -35px"
+            style="position: absolute; bottom: 0px"
             onclick="previewHander()"
           >
             <span class="aops-font">S</span> SHOW PREVIEW
@@ -267,11 +267,135 @@
         <h2 id="msgtitle"></h2>
         <b id="msgfrom"></b>
         <span id="msgtimestamp" style="float: right; margin-right: 5px"
-          >January 1, 0000, (12:00 AM)</span
+          >January 1, 1970, (00:00)</span
         ><br />
+        <span
+          style="float: right; margin-right: 5px"
+          onclick="$('#replyeditor').fadeIn(700);$('#message .modal-content').animate({ scrollTop: 1000 }, 700);"
+          ><span class="aops-font">N</span>&nbsp;Reply</span
+        >
+        <br />
         <span style="color: Gray">To <span id="towho"></span></span>
         <br />
         <span id="msgmsg"></span>
+        <hr>
+        <div id="replies">
+        
+        </div>
+          <div id="replyeditor" style="display: none">
+            <form
+              id="replyform"
+              onsubmit="$('#replytime').val(Date.now());$('#replytok').val(encodeURIComponent(window.token));$('#replymessageid').val(msgid);$('#replymsgg').val(encodeURIComponent($('#replymsgg').val()));$('#replymessagesender').val(encodeURIComponent(window.username));$('#replynext').val(encodeURIComponent(window.location.href))"
+              action="/messages/reply"
+            >
+              <div id="headermsg" style="display: none">
+                <input name="timestamp" id="replytime" />
+                <input name="token" id="replytok" />
+                <input name="id" id="replymessageid" />
+                <input name="username" id="replymessagesender" />
+                <input name="next" id="replynext" />
+              </div>
+              <div id="messageeditor">
+                <div class="textarea-above">
+                  <div class="uses-bbcode">This editor uses <i>BBcode</i></div>
+                  <span
+                    class="editorclose aops-font"
+                    style="margin-right: 5px; margin-top: 2px; color: black"
+                    onclick="$('#replyeditor').fadeOut(700);$('#message .modal-content').animate({ scrollTop: 0 }, 700);"
+                    >J</span
+                  ><button class="post-submit">Submit</button>
+                </div>
+                <div id="replymessage-container">
+                  <textarea
+                    id="replymessage"
+                    name="msg"
+                    required
+                    id="replymsgg"
+                  ></textarea>
+                </div>
+              </div>
+            </form>
+            <div id="replytoolbar">
+              <button onclick="inserttext('[b]', '[/b]', '#replymessage')">
+                <span class="fa fa-bold"></span>
+              </button>
+              <button
+                onclick="inserttext('[code=lang]', '[/code]', '#replymessage')"
+              >
+                <span class="fa fa-code"></span>
+              </button>
+              <button
+                onclick="inserttext('[color=#bada55]', '[/color]', '#replymessage')"
+              >
+                <span class="fa fa-paint-brush"></span>
+              </button>
+              <button
+                onclick="inserttext('[font=monospace]', '[/font]', '#replymessage')"
+              >
+                <span class="fa fa-font"></span>
+              </button>
+              <button onclick="inserttext('[i]', '[/i]', '#replymessage')">
+                <span class="fa fa-italic"></span>
+              </button>
+              <button onclick="inserttext('[img]', '[/img]', '#replymessage')">
+                <span class="fa fa-image"></span>
+              </button>
+              <button onclick="inserttext('$', '$', '#replymessage')">
+                <span class="fa fa-square-root-alt"></span>
+              </button>
+              <button
+                onclick="inserttext('[quote]', '[/quote]', '#replymessage')"
+              >
+                <span class="fa fa-quote-left"></span>
+              </button>
+              <button
+                onclick="inserttext('[hide]', '[/hide]', '#replymessage')"
+              >
+                <span class="fa fa-eye-slash"></span>
+              </button>
+              <button onclick="inserttext('[rule]', '', '#replymessage')">
+                <span class="fa fa-grip-lines"></span>
+              </button>
+              <button onclick="inserttext('[u]', '[/u]', '#replymessage')">
+                <span class="fa fa-underline"></span>
+              </button>
+              <button onclick="inserttext('[url]', '[/url]', '#replymessage')">
+                <span class="fa fa-link"></span>
+              </button>
+              <button
+                onclick="inserttext('[size=12px]', '[/size]', '#replymessage')"
+              >
+                <span class="fa fa-text-height"></span>
+              </button>
+              <button
+                onclick="inserttext('[youtube]', '[/youtube]', '#replymessage')"
+              >
+                <span class="fab fa-youtube"></span>
+              </button>
+              <button
+                onclick="$('.replypreview').html(bbcodeparse($('#replymessage').val()));MathJax.typeset();hljs.highlightAll();"
+                )
+                id="refresh-btn"
+              >
+                <span class="fa fa-refresh fa-spin"></span>
+              </button>
+            </div>
+
+            <div class="previewmsg-container" style="display: none">
+              <div class="replypreview"></div>
+            </div>
+
+            <div class="preview">
+              <button
+                class="show-preview"
+                style="position: absolute; bottom: 0px"
+                onclick="previewHander()"
+              >
+                <span class="aops-font">S</span> SHOW PREVIEW
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <style>
@@ -320,9 +444,17 @@
             <button
               style="margin: 2.5px"
               class="compose-msg"
-              onclick="$('#editor').fadeIn(150);$('#msegtoo, #msegsub, #realmessage').val('');$('#previewmsg').html('')"
+              onclick="$('#editor').fadeIn(150);$('#msegtoo, #msegsub, #realmessage').val('');$('.previewmsg').html('')"
             >
               <span style="font-family: 'AoPS'">V</span> Compose New Message
+            </button>
+
+            <button
+              id="logout"
+              style="margin: 2.5px"
+              onclick='$("#resetusername").val(username);$("#resettok").val(token);$("#respsw").fadeIn(150);$(`#respsw input[name="newpsw"]`).val("");$(`#respsw input[name="next"]`).val(encodeURIComponent(window.location.href))'
+            >
+              <span style="font-family: 'AoPS'">L</span> Change password
             </button>
             <button
               id="logout"
@@ -337,24 +469,9 @@
                 >S</span
               > -->
             </button>
-            <button
-              id="logout"
-              style="margin: 2.5px"
-              onclick='$("#resetusername").val(username);$("#resettok").val(token);$("#respsw").fadeIn();$(`#respsw input[name="newpsw"]`).val("");$(`#respsw input[name="next"]`).val(encodeURIComponent(window.location.href))'
-            >
-              <span style="font-family: 'AoPS'">L</span> Change password
-            </button>
+
             <form
               action="/signup/passwordreset"
-              style="
-                background-color: black;
-                color: white;
-                padding: 5px;
-                border-radius: 10px;
-                position: relative;
-                top: 10px;
-                display: none;
-              "
               id="respsw"
               onsubmit='$(`#respsw input[name="newpsw"]`).val(encodeURIComponent($(`#respsw input[name="newpsw"]`).val()));'
             >
@@ -423,21 +540,21 @@
     </script>
 
     <script>
-      $("#previewmsg-container").hide();
+      $(".previewmsg-container").hide();
       $("#message").hide();
 
       /// PREVIEW BUTTON HANDLER ///
       const previewHander = () => {
-        if ($("#previewmsg-container").is(":visible")) {
+        if ($(".previewmsg-container").is(":visible")) {
           document.querySelector(".show-preview").innerHTML =
             "<span class='aops-font' >S</span> SHOW PREVIEW";
-          $("#previewmsg-container").hide();
+          $(".previewmsg-container").hide();
           $(".show-preview").css("position", "absolute");
-          $(".show-preview").css("bottom", "-35px");
+          $(".show-preview").css("bottom", "0px");
         } else {
           document.querySelector(".show-preview").innerHTML =
             "<span class='aops-font' >T</span> CLOSE PREVIEW";
-          $("#previewmsg-container").show();
+          $(".previewmsg-container").show();
           $(".show-preview").css("position", "static");
         }
       };

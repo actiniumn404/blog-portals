@@ -1,7 +1,7 @@
 {
-  "name": "socket-chat-example",
+  "name": "AoPS-blog-portal",
   "version": "0.0.1",
-  "description": "my first socket.io app",
+  "description": "A portal for blogs on AoPS",
   "scripts": {
     "format": "prettier -w ."
   },
