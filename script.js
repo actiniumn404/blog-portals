@@ -161,6 +161,8 @@ function create_msgs(us) {
           messagelist.push(meseg);
         }
       });
+      // last activity time
+      document.cookie = `__lastactivity=${Date.now()}; expires=31 Dec 3000 12:00:00 UTC; path=/`;
       let counter = 0;
       messagelist.forEach(raw_message => {
         if (raw_message.id === blogid) {
@@ -223,15 +225,16 @@ function open_msg(fromm, title, message, timestamp, replies) {
   $("#replies").html("");
   if (replyparse !== []) {
     replyparse.forEach(a => {
-      let newtime = new Date(parseInt(a.timestamp))
+      let newtime = new Date(parseInt(a.timestamp));
       $("#replies").append(`<div class="reply">
             <span style="color:gray">${
               a.from
-            }</span> <span style="float:right;">${newtime.toLocaleDateString() + " " + newtime.toLocaleTimeString()
+            }</span> <span style="float:right;">${
+        newtime.toLocaleDateString() + " " + newtime.toLocaleTimeString()
       }</span><br>
-            <div class="replymessagemessage">${bbcodeparse(decodeURIComponent(
-              a.message
-            ))}</div>
+            <div class="replymessagemessage">${bbcodeparse(
+              decodeURIComponent(a.message)
+            )}</div>
             <hr />
           </div>`);
     });
@@ -277,11 +280,8 @@ $(function () {
 });
 // #stackoverflow_is_the_best
 function delete_all_cookies() {
-  document.cookie.split(";").forEach(function (c) {
-    document.cookie = c
-      .replace(/^ +/, "")
-      .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-  });
+  document.cookie = "__tok=; expires=31 Dec 1999 12:00:00 UTC; path=/";
+  document.cookie = "__name=;expires=31 Dec 1999 12:00:00 UTC; path=/";
 }
 
 function request_contrib() {

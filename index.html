@@ -105,7 +105,7 @@
 
     <div id="editor" class="modal">
       <div class="modal-content" style="position: relative">
-        <form action="/messages/log">
+        <form action="/messages/log" target="_blank">
           <div id="headermsg">
             <input name="from" id="mesgfrom" />
             <label for="to">To</label
@@ -271,7 +271,7 @@
         ><br />
         <span
           style="float: right; margin-right: 5px"
-          onclick="$('#replyeditor').fadeIn(700);$('#message .modal-content').animate({ scrollTop: 1000 }, 700);"
+          onclick="$('#replyeditor').fadeIn(700);$('#message .modal-content').animate({ scrollTop: $('#message .modal-content').prop('scrollHeight') }, 700);"
           ><span class="aops-font">N</span>&nbsp;Reply</span
         >
         <br />
@@ -285,8 +285,9 @@
           <div id="replyeditor" style="display: none">
             <form
               id="replyform"
-              onsubmit="$('#replytime').val(Date.now());$('#replytok').val(encodeURIComponent(window.token));$('#replymessageid').val(msgid);$('#replymsgg').val(encodeURIComponent($('#replymsgg').val()));$('#replymessagesender').val(encodeURIComponent(window.username));$('#replynext').val(encodeURIComponent(window.location.href))"
+              onsubmit="$('#replytime').val(Date.now());$('#replytok').val(encodeURIComponent(window.token));$('#replymessageid').val(msgid);$('#replymsgg').val(encodeURIComponent($('#replymsgg').val()));$('#replymessagesender').val(encodeURIComponent(window.username));$('#replynext').val(encodeURIComponent(window.location.href));$('#replyeditor').fadeOut(700);$('#message .modal-content').animate({ scrollTop: 0 }, 700);$('#message').fadeOut(100);setTimeout(()=>{create_msgs(window.username)},2000)"
               action="/messages/reply"
+              target="_blank"
             >
               <div id="headermsg" style="display: none">
                 <input name="timestamp" id="replytime" />
@@ -474,6 +475,7 @@
               action="/signup/passwordreset"
               id="respsw"
               onsubmit='$(`#respsw input[name="newpsw"]`).val(encodeURIComponent($(`#respsw input[name="newpsw"]`).val()));'
+              target="_blank"
             >
               <input name="username" style="display: none" id="resetusername" />
               <input name="token" style="display: none" id="resettok" />
